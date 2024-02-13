@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sortable Bar Graph</title>
+<style>
+  /* CSS for the bar graph */
+  .bar-graph {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 800px; /* Adjust the width as needed */
+    margin: 20px auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  .bar {
+    background-color: skyblue; /* Green */
+    width: 20px; /* Change the width of bars */
+    transition: height 1s ease-in-out; /* Change transition property to height */
+  }
+</style>
+</head>
+<body>
+
+<div>
+        <button onclick="randomizeBars()">Randomize array</button>
+        <button onclick="insertionSort()">Insertion Sort</button>
+        <button onclick="selectionSort()">Selection Sort</button>
+        <button onclick="bubbleSort()">Bubble Sort</button>
+        <button onclick="quickSort()">Quick Sort</button>
+        <button onclick="mergeSort()">Merge Sort</button>
+        <button onclick="shellSort()">Shell Sort</button>
+        <button onclick="changeSize()">Change size</button>
+</div>   
+
+<div class="bar-graph">
+  <div class="bar" style="height: 200px;"></div>
+  <div class="bar" style="height: 160px;"></div>
+  <div class="bar" style="height: 140px;"></div>
+  <div class="bar" style="height: 120px;"></div>
+  <div class="bar" style="height: 100px;"></div>
+  <div class="bar" style="height: 80px;"></div>
+  <div class="bar" style="height: 60px;"></div>
+  <div class="bar" style="height: 40px;"></div>
+  <div class="bar" style="height: 110px;"></div>
+  <div class="bar" style="height: 90px;"></div>
+  <div class="bar" style="height: 70px;"></div>
+  <div class="bar" style="height: 50px;"></div>
+</div>
+
+
+
+<script>
+  // JavaScript for sorting and randomizing bars
+
+  // Function to generate random integer between min and max (inclusive)
+  function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  // Function to get an array of heights of bars
+  function getBarHeights() {
+    var bars = document.querySelectorAll('.bar');
+    var heights = [];
+    bars.forEach(function(bar) {
+      heights.push(parseInt(bar.style.height));
+    });
+    return heights;
+  }
+
+  // Function to set heights of bars
+  function setBarHeights(heights) {
+    var bars = document.querySelectorAll('.bar');
+    bars.forEach(function(bar, index) {
+      bar.style.height = heights[index] + 'px';
+    });
+  }
+
+  // Randomize array function
+  function randomizeBars() {
+    var bars = document.querySelectorAll('.bar');
+    var newHeights = [];
+    bars.forEach(function() {
+      newHeights.push(getRandomInt(20, 200)); // Change range according to your preference
+    });
+    setBarHeights(newHeights);
+  }
+
+  // Insertion Sort function
+  function insertionSort() {
+    
+    var heights = getBarHeights();
+    var n = heights.length;
+    for (var i = 1; i < n; i++) {
+      var key = heights[i];
+      var j = i - 1;
+      while (j >= 0 && heights[j] > key) {
+        heights[j + 1] = heights[j];
+        j = j - 1;
+      }
+      heights[j + 1] = key;
+    }
+    setBarHeights(heights);
+    alert("Insertion Sort");
+  }
+
+  // Selection Sort function
+  function selectionSort() {
+    var heights = getBarHeights();
+    var n = heights.length;
+    for (var i = 0; i < n - 1; i++) {
+      var minIndex = i;
+      for (var j = i + 1; j < n; j++) {
+        if (heights[j] < heights[minIndex]) {
+          minIndex = j;
+        }
+      }
+      var temp = heights[minIndex];
+      heights[minIndex] = heights[i];
+      heights[i] = temp;
+    }
+    setBarHeights(heights);
+    alert("Selection Sort")
+    
+  }
+
+  // Bubble Sort function
+  function bubbleSort() {
+    var heights = getBarHeights();
+    var n = heights.length;
+    for (var i = 0; i < n - 1; i++) {
+      for (var j = 0; j < n - i - 1; j++) {
+        if (heights[j] > heights[j + 1]) {
+          var temp = heights[j];
+          heights[j] = heights[j + 1];
+          heights[j + 1] = temp;
+        }
+      }
+    }
+    setBarHeights(heights);
+    alert("Bubble Sort")
+  }
+
+  // Quick Sort function
+  function quickSort() {
+    var heights = getBarHeights();
+    quickSortHelper(heights, 0, heights.length - 1);
+    setBarHeights(heights);
+    alert("Quick Sort");
+  }
+  function quickSortHelper(arr, low, high) {
+    if (low < high) {
+      var pi = partition(arr, low, high);
+      quickSortHelper(arr, low, pi - 1);
+      quickSortHelper(arr, pi + 1, high);
+    }
+  }
+
+  function partition(arr, low, high) {
+    var pivot = arr[high];
+    var i = low - 1;
+    for (var j = low; j < high; j++) {
+      if (arr[j] < pivot) {
+        i++;
+        var temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+      }
+    }
+    var temp = arr[i + 1];
+    arr[i + 1] = arr[high];
+    arr[high] = temp;
+    return i + 1;
+  }
+
+  // Merge Sort function
+  function mergeSort() {
+    var heights = getBarHeights();
+    mergeSortHelper(heights, 0, heights.length - 1);
+    setBarHeights(heights);
+    alert("Merge Sort");
+  }
+  function mergeSortHelper(arr, l, r) {
+    if (l < r) {
+      var m = Math.floor((l + r) / 2);
+      mergeSortHelper(arr, l, m);
+      mergeSortHelper(arr, m + 1, r);
+      merge(arr, l, m, r);
+    }
+  }
+
+  function merge(arr, l, m, r) {
+    var n1 = m - l + 1;
+    var n2 = r - m;
+
+    var L = new Array(n1);
+    var R = new Array(n2);
+
+    for (var i = 0; i < n1; i++)
+      L[i] = arr[l + i];
+    for (var j = 0; j < n2; j++)
+      R[j] = arr[m + 1 + j];
+
+    var i = 0;
+    var j = 0;
+    var k = l;
+    while (i < n1 && j < n2) {
+      if (L[i] <= R[j]) {
+        arr[k] = L[i];
+        i++;
+      } else {
+        arr[k] = R[j];
+        j++;
+      }
+      k++;
+    }
+
+    while (i < n1) {
+      arr[k] = L[i];
+      i++;
+      k++;
+    }
+
+    while (j < n2) {
+      arr[k] = R[j];
+      j++;
+      k++;
+    }
+  }
+
+  // Shell Sort function
+  function shellSort() {
+    var heights = getBarHeights();
+    var n = heights.length;
+
+    for (var gap = Math.floor(n / 2); gap > 0; gap = Math.floor(gap / 2)) {
+    for (var i = gap; i < n; i++) {
+    var temp = heights[i];
+    var j;
+    for (j = i; j >= gap && heights[j - gap] > temp; j -= gap) {
+      heights[j] = heights[j - gap];
+    }
+    heights[j] = temp;
+  }
+}
+
+    setBarHeights(heights);
+    alert("Shell Sort");
+  }
+
+  // Change size function
+  function changeSize() {
+    var bars = document.querySelectorAll('.bar');
+    bars.forEach(function(bar) {
+      var currentHeight = parseInt(bar.style.height);
+      var newSize = currentHeight * 0.8; // Reducing size by 20%
+      bar.style.height = newSize + 'px';
+    });
+  }
+</script>
+
+</body>
+</html>
